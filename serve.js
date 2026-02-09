@@ -8,13 +8,18 @@ const __dirname = dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 4173;
 
+// Health check
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', service: 'xeriaco-frontend', version: '9.2.0', uptime: Math.floor(process.uptime()) });
+});
+
 // Serve static files from dist
 app.use(express.static(join(__dirname, 'dist'), {
   maxAge: '1d',
   etag: true,
 }));
 
-// SPA fallback — serve index.html for all routes
+// SPA fallback
 app.get('*', (req, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'));
 });
